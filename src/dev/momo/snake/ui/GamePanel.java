@@ -22,11 +22,8 @@ public class GamePanel extends JPanel implements KeyListener{
         setVisible(true);
         setBackground(Color.DARK_GRAY);
         addKeyListener(this);
+        frame.addKeyListener(this);
         frame.add(this);
-        getInputMap().put(KeyStroke.getKeyStroke('w'), "a");
-        getInputMap().put(KeyStroke.getKeyStroke('a'), "a");
-        getInputMap().put(KeyStroke.getKeyStroke('s'), "a");
-        getInputMap().put(KeyStroke.getKeyStroke('d'), "a");
     }
 
     @Override
@@ -57,6 +54,14 @@ public class GamePanel extends JPanel implements KeyListener{
                     }
                 }
 
+                if ((x == 0 || x == tileCount-1) || (y == 0 || y == tileCount-1)) {
+                    g.setColor(Color.GRAY);
+                }
+
+                if (game.getFood().equals(tile)) {
+                    g.setColor(Color.GRAY);
+                }
+
                 g.fillRect(x * tileSize + (x*gapSize) + gapSize, y * tileSize + y*gapSize + gapSize, tileSize, tileSize);
                 g.setColor(new Color(70, 70, 70));
             }
@@ -71,7 +76,6 @@ public class GamePanel extends JPanel implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println("Hi");
         if (e.getKeyChar() == 'w') {
             game.setDirection(SnakeFace.NORTH);
         } else if (e.getKeyChar() == 'a') {
