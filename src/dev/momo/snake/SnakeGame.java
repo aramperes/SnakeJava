@@ -87,6 +87,10 @@ public class SnakeGame {
         if (collide) {
             //JOptionPane.showConfirmDialog(frame, "ded bro, score=" + (snakeSize-10), "", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE);
             //System.exit(0);
+
+            int score = snakeSize - 10;
+            int distance = snakeTiles.size();
+            JOptionPane.showMessageDialog(panel, "You died.\nYour final score was " + score + " points.\nYou traveled " + distance + " tiles in total.");
             defaultSnake();
 
             return;
