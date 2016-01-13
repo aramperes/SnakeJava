@@ -47,19 +47,25 @@ public class GamePanel extends JPanel implements KeyListener{
                     try {
 
                         if (game.getSnakeTiles().get(i).equals(tile)) {
-                            g.setColor(Color.GRAY);
+
+                            if (i == 0) {
+                                g.setColor(Color.ORANGE);
+                            } else {
+                                g.setColor(Color.GRAY);
+                            }
+
                         }
-                    } catch(IndexOutOfBoundsException ex) {
+                    } catch(Exception ex) {
 
                     }
                 }
 
                 if ((x == 0 || x == tileCount-1) || (y == 0 || y == tileCount-1)) {
-                    g.setColor(Color.GRAY);
+                    g.setColor(new Color(80, 80, 80));
                 }
 
                 if (game.getFood().equals(tile)) {
-                    g.setColor(Color.GRAY);
+                    g.setColor(Color.RED);
                 }
 
                 g.fillRect(x * tileSize + (x*gapSize) + gapSize, y * tileSize + y*gapSize + gapSize, tileSize, tileSize);
@@ -76,13 +82,13 @@ public class GamePanel extends JPanel implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyChar() == 'w') {
+        if (e.getKeyChar() == 'w'  || e.getKeyCode() == KeyEvent.VK_UP) {
             game.setDirection(SnakeFace.NORTH);
-        } else if (e.getKeyChar() == 'a') {
+        } else if (e.getKeyChar() == 'a'  || e.getKeyCode() == KeyEvent.VK_LEFT) {
             game.setDirection(SnakeFace.WEST);
-        } else if (e.getKeyChar() == 'd') {
+        } else if (e.getKeyChar() == 'd' || e.getKeyCode() == KeyEvent.VK_RIGHT) {
             game.setDirection(SnakeFace.EAST);
-        } else if (e.getKeyChar() == 's') {
+        } else if (e.getKeyChar() == 's'  || e.getKeyCode() == KeyEvent.VK_DOWN) {
             game.setDirection(SnakeFace.SOUTH);
         }
     }
