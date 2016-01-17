@@ -1,5 +1,6 @@
 package dev.momo.snake;
 
+import dev.momo.snake.io.StatsLoader;
 import dev.momo.snake.ui.GameFrame;
 import dev.momo.snake.ui.GamePanel;
 import dev.momo.snake.ui.RenderThread;
@@ -15,15 +16,25 @@ public class SnakeGame {
     private int snakeSize = 10;
     private Point food;
     private int speed = 0;
+    private boolean tutorial = true;
+    private boolean results = false;
 
     private final GameFrame frame;
     private final GamePanel panel;
     private final Random random = new Random();
     private List<Point> snakeTiles = new ArrayList<>();
 
+    private boolean firstTime;
+    public int cache_hs;
+    private final StatsLoader statsLoader;
+
     private SnakeFace direction = SnakeFace.NONE;
 
     public SnakeGame() {
+        statsLoader = new StatsLoader();
+        statsLoader.test();
+        firstTime = statsLoader.getName() == null;
+        cache_hs = statsLoader.getHighScore();
         frame = new GameFrame(this);
         panel = new GamePanel(this, frame);
         defaultSnake();
@@ -32,8 +43,9 @@ public class SnakeGame {
         new RenderThread(this).start();
     }
 
-    private void defaultSnake() {
+    public void defaultSnake() {
        // for (int i = 0; i < snakeSize; i++)
+        setResults(false);
         snakeTiles.clear();
         snakeTiles.add(new Point(15, 15));
         direction = SnakeFace.NONE;
@@ -50,7 +62,7 @@ public class SnakeGame {
     public void executeTick(int speed) {
 
         this.speed = speed;
-        frame.setTitle("Snake - Speed: " + speed + " tiles/s");
+        frame.setTitle("Snake - Speed: " + speed + " tiles/s - Score: " + (snakeSize-10) + " points");
 
         if (food == null)
             return;
@@ -90,9 +102,13 @@ public class SnakeGame {
 
             int score = snakeSize - 10;
             int distance = snakeTiles.size();
-            JOptionPane.showMessageDialog(panel, "You died.\nYour final score was " + score + " points.\nYou traveled " + distance + " tiles in total.");
-            defaultSnake();
+            //JOptionPane.showMessageDialog(panel, "You died.\nYour final score was " + score + " points.\nYou traveled " + distance + " tiles in total.");
+            //defaultSnake();
+            setResults(true);
 
+            if (getStatsLoader().getHighScore() < getScore()) {
+                getStatsLoader().setHighScore(getScore());
+            }
             return;
         }
 
@@ -144,5 +160,37 @@ public class SnakeGame {
 
         food = f;
         return true;
+    }
+
+    public int getScore() {
+        return snakeSize - 10;
+    }
+
+    public boolean shouldShowTutorial() {
+        return tutorial;
+    }
+
+    public void setTutorial(boolean tutorial) {
+        this.tutorial = tutorial;
+    }
+
+    public boolean shouldShowResults() {
+        return results;
+    }
+
+    public void setResults(boolean results) {
+        this.results = results;
+    }
+
+    public StatsLoader getStatsLoader() {
+        return statsLoader;
+    }
+
+    public boolean isFirstTime() {
+        return firstTime;
+    }
+
+    public void setFirstTime(boolean firstTime) {
+        this.firstTime = firstTime;
     }
 }
